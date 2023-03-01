@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DemoEF.Models;
+using DemoEF.DBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoEF.Controllers
 {
@@ -7,22 +9,26 @@ namespace DemoEF.Controllers
     [Route("api/[controller]")]
     public class AutoresController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<Autor>> Get()
+        private readonly ApplicationDbContext _context;
+
+        public AutoresController(ApplicationDbContext context)
         {
-            return new List<Autor>()
-            {
-                new Autor()
-                {
-                    Id = 1,
-                    Name = "Test",
-                },
-                new Autor()
-                {
-                    Id = 2,
-                    Name = "Test 2",
-                }
-            };
+            this._context = context;
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult<List<Autor>>> Get()
+        {
+            return await _context.Autores.ToListAsync();
+        }
+        [HttpPost]
+        public async Task<ActionResult<Autor>> Post([FromBody] Autor autor)
+        {
+            _context.Add(autor);
+            await _context.SaveChangesAsync();
+            return Ok(autor);
+        }
+
     }
 }
