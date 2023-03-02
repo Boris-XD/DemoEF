@@ -10,6 +10,7 @@ namespace DemoEF.DBContext
 
         }
         
-        public DbSet<Autor> Autores { get; set; } 
+        public DbSet<Autor> Autores { get; set; }
+        public DbSet<Book> Books { get; set; }
     }
 }

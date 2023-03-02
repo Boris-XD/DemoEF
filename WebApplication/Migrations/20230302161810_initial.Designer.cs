@@ -11,18 +11,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoEF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230301014359_Inicial")]
-    partial class Inicial
+    [Migration("20230302161810_initial")]
+    partial class initial
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "6.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("DemoEF.Models.Autor", b =>
                 {
@@ -30,7 +29,7 @@ namespace DemoEF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -39,6 +38,26 @@ namespace DemoEF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Autores");
+                });
+
+            modelBuilder.Entity("DemoEF.Models.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AutorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
                 });
 #pragma warning restore 612, 618
         }
