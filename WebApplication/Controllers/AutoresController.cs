@@ -31,6 +31,46 @@ namespace DemoEF.Controllers
             return await _context.Autores.FirstOrDefaultAsync();
         }
 
+
+        /* Variables de Ruta */
+        [HttpGet("{id:int}")]  //       api/autores/valorId  https://localhost:7262/api/autores/1
+        public async Task<ActionResult<Autor>> Get(int id)
+        {
+            var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+            if(result == null) 
+            {
+                return NotFound("No encontrado");
+            }
+            return result;
+        }
+
+        /* Variables de Ruta */
+        [HttpGet("{id:int}/{param=default}")]
+        public async Task<ActionResult<Autor>> Get(int id, string param)
+        {
+            var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id && x.Name.Contains(param));
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return result;
+
+        }
+
+        /* Variables de Ruta */
+        [HttpGet("{id:int}/nombre")]  //  Ruta api/autores/1/nombre?nums=myValue&vals=myValue
+        public async Task<ActionResult<Autor>> Get(int id, string nums, string vals)
+        {
+            var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id && x.Name.Contains(nums));
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return result;
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<Autor>> Post([FromBody] Autor autor)
         {
@@ -38,7 +78,6 @@ namespace DemoEF.Controllers
             await _context.SaveChangesAsync();
             return Ok(autor);
         }
-
         [HttpPut("{id:int}")] //api/autores/1
         public async Task<ActionResult> Put(int id, [FromBody] Autor autor)
         {
