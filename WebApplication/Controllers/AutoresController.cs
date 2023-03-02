@@ -30,5 +30,31 @@ namespace DemoEF.Controllers
             return Ok(autor);
         }
 
+        [HttpPut("{id:int}")] //api/autores/1
+        public async Task<ActionResult> Put(int id, [FromBody] Autor autor)
+        {
+            var exist = await _context.Autores.AnyAsync(x => x.Id == id);
+            if (!exist)
+            {
+                return NotFound();
+            }
+            _context.Update(autor);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exist = await _context.Autores.AnyAsync(x => x.Id == id);
+            if (!exist)
+            {
+                return NotFound();
+            }
+            _context.Remove(new Autor() { Id = id });
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        
     }
 }
