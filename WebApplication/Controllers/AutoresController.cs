@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DemoEF.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/autores")] //   podria llamarse al controlador => [Route("api/[controller]")]
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -17,11 +17,20 @@ namespace DemoEF.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet]                   //  api/autores/
+        [HttpGet("listado")]        //  api/autores/listado
+        [HttpGet("/listado")]       //  /listado
         public async Task<ActionResult<List<Autor>>> Get()
         {
             return await _context.Autores.ToListAsync();
         }
+        
+        [HttpGet("primer")] //    api/autores/primer
+        public async Task<ActionResult<Autor>> GetFirstAutor()
+        {
+            return await _context.Autores.FirstOrDefaultAsync();
+        }
+
         [HttpPost]
         public async Task<ActionResult<Autor>> Post([FromBody] Autor autor)
         {
