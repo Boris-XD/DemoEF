@@ -1,4 +1,5 @@
 using DemoEF.DBContext;
+using DemoEF.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -13,6 +14,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>( options
     => options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")));
 builder.Services.AddSwaggerGen();
+
+// builder.Services.AddTransient<ServiceA>();
+// builder.Services.AddScoped<IService, ServiceA>();
+// builder.Services.AddSingleton<IService, ServiceA>();
+builder.Services.AddTransient<IService, ServiceA>();
+builder.Services.AddTransient<ServiceTransient>();
+builder.Services.AddScoped<ServiceScoped>();
+builder.Services.AddSingleton<ServiceSingleton>();
 
 var app = builder.Build();
 

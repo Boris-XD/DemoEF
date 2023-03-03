@@ -2,6 +2,7 @@
 using DemoEF.Models;
 using DemoEF.DBContext;
 using Microsoft.EntityFrameworkCore;
+using DemoEF.Services;
 
 namespace DemoEF.Controllers
 {
@@ -10,12 +11,34 @@ namespace DemoEF.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        public ServiceTransient _serviceTransient;
+        public ServiceScoped _serviceScoped;
+        public ServiceSingleton _serviceSingleton;
+        private readonly IService _service;
 
-        public AutoresController(ApplicationDbContext context)
+        public AutoresController(ApplicationDbContext context, IService service, ServiceTransient serviceTransient, ServiceScoped serviceScoped,
+                ServiceSingleton serviceSingleton)
         {
-            this._context = context;
+            _context = context;
+            _serviceSingleton = serviceSingleton;
+            _serviceScoped = serviceScoped;
+            _serviceTransient = serviceTransient;
+            _service = service;
         }
-
+        [HttpGet("GUID")]
+        public ActionResult GetGuids()
+        {
+            return Ok( new
+            {
+                ServiceTransient_Guid = _serviceTransient.Guid,
+                ServiceATransient_Guid = _service.GetGuidTransiant(),
+                ServiceScoped_Guid = _serviceScoped.Guid,
+                ServiceAScoped_Guid = _service.GetGuidScoped(),
+                ServiceSingleton_Guid = _serviceSingleton.Guid,
+                ServiceASingleton_Guid = _service.GetGuidSingleton(),
+                
+            });
+        }
 
         [HttpGet]                   //  api/autores/
         [HttpGet("listado")]        //  api/autores/listado
