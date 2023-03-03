@@ -46,10 +46,10 @@ namespace DemoEF.Controllers
 
         /* Variables de Ruta */
         [HttpGet("{id:int}/{param=default}")]
-        public async Task<ActionResult<Autor>> Get(int id, string param)
+        public async Task<ActionResult<Autor>> get(int id, string param)
         {
             var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id && x.Name.Contains(param));
-            if(result == null)
+            if (result == null)
             {
                 return NotFound();
             }
@@ -58,10 +58,10 @@ namespace DemoEF.Controllers
         }
 
         /* Variables de Ruta */
-        [HttpGet("{id:int}/nombre")]  //  Ruta api/autores/1/nombre?nums=myValue&vals=myValue
-        public async Task<ActionResult<Autor>> Get(int id, string nums, string vals)
+        [HttpGet("{id:int}/queries")]  //  Ruta api/autores/1/queries?nums=myValue&vals=myValue
+        public async Task<ActionResult<Autor>> Get([FromRoute] int id, [FromQuery] string nombre, [FromQuery] string vals)
         {
-            var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id && x.Name.Contains(nums));
+            var result = await _context.Autores.FirstOrDefaultAsync(x => x.Id == id && x.Name.Contains(nombre));
             if (result == null)
             {
                 return NotFound();
