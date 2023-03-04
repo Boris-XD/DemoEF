@@ -14,17 +14,20 @@ namespace DemoEF.Controllers
         public ServiceTransient _serviceTransient;
         public ServiceScoped _serviceScoped;
         public ServiceSingleton _serviceSingleton;
+        private readonly ILogger<AutoresController> _logger;
         private readonly IService _service;
 
         public AutoresController(ApplicationDbContext context, IService service, ServiceTransient serviceTransient, ServiceScoped serviceScoped,
-                ServiceSingleton serviceSingleton)
+                ServiceSingleton serviceSingleton, ILogger<AutoresController> logger)
         {
             _context = context;
             _serviceSingleton = serviceSingleton;
+            _logger = logger;
             _serviceScoped = serviceScoped;
             _serviceTransient = serviceTransient;
             _service = service;
         }
+
         [HttpGet("GUID")]
         public ActionResult GetGuids()
         {
@@ -45,6 +48,7 @@ namespace DemoEF.Controllers
         [HttpGet("/listado")]       //  /listado
         public async Task<ActionResult<List<Autor>>> Get()
         {
+            _logger.LogInformation("Estamos obteniendo el listado de los autores");
             return await _context.Autores.ToListAsync();
         }
         
