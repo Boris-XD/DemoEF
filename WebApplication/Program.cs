@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -26,6 +25,29 @@ builder.Services.AddSingleton<ServiceSingleton>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+/* Add an example to Middlerware */
+app.Use(async (contexto, siguiente) =>
+{
+    using(var ms = new MemoryStream())
+    {
+        var cuerpoOriginalRespuesta = contexto.Response.Body;
+        contexto.Response.Body = ms;
+
+        await siguiente.Invoke();
+
+        ms.Seek(0, SeekOrigin.Begin);
+        string respuesta = new StreamReader(ms).ReadToEnd();
+        ms.Seek(0, SeekOrigin.Begin);
+
+        await ms.CopyToAsync(cuerpoOriginalRespuesta);
+        contexto.Response.Body = cuerpoOriginalRespuesta;
+
+        app.Logger.LogInformation(respuesta);
+        
+    }
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
