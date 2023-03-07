@@ -29,6 +29,7 @@ namespace DemoEF.Controllers
         }
 
         [HttpGet("GUID")]
+        [ResponseCache(Duration = 5)]
         public ActionResult GetGuids()
         {
             return Ok( new

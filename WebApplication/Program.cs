@@ -23,6 +23,8 @@ builder.Services.AddTransient<ServiceTransient>();
 builder.Services.AddScoped<ServiceScoped>();
 builder.Services.AddSingleton<ServiceSingleton>();
 
+builder.Services.AddResponseCaching();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -68,6 +70,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseResponseCaching();
 
 app.UseAuthorization();
 
