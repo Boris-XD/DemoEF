@@ -1,4 +1,5 @@
 using DemoEF.DBContext;
+using DemoEF.middlewares;
 using DemoEF.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -27,26 +28,38 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 /* Add an example to Middlerware */
-app.Use(async (contexto, siguiente) =>
-{
-    using(var ms = new MemoryStream())
-    {
-        var cuerpoOriginalRespuesta = contexto.Response.Body;
-        contexto.Response.Body = ms;
 
-        await siguiente.Invoke();
+// First option - to catch output messages 
+//app.Use(async (contexto, siguiente) =>
+//{
+//    using(var ms = new MemoryStream())
+//    {
+//        var cuerpoOriginalRespuesta = contexto.Response.Body;
+//        contexto.Response.Body = ms;
 
-        ms.Seek(0, SeekOrigin.Begin);
-        string respuesta = new StreamReader(ms).ReadToEnd();
-        ms.Seek(0, SeekOrigin.Begin);
+//        await siguiente.Invoke();
 
-        await ms.CopyToAsync(cuerpoOriginalRespuesta);
-        contexto.Response.Body = cuerpoOriginalRespuesta;
+//        ms.Seek(0, SeekOrigin.Begin);
+//        string respuesta = new StreamReader(ms).ReadToEnd();
+//        ms.Seek(0, SeekOrigin.Begin);
 
-        app.Logger.LogInformation(respuesta);
-        
-    }
-});
+//        await ms.CopyToAsync(cuerpoOriginalRespuesta);
+//        contexto.Response.Body = cuerpoOriginalRespuesta;
+
+//        app.Logger.LogInformation(respuesta);
+
+//    }
+//});
+
+
+// Seconf option - to catch output messages with a class
+// app.UseMiddleware<LoguearRespuestaHTTPMiddleware>();
+
+
+// Third option creating a static class to catch output messages
+app.UseLoguearRespuestaHTTP();
+
+
 
 if (app.Environment.IsDevelopment())
 {
