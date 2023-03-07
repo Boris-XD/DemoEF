@@ -3,6 +3,7 @@ using DemoEF.Models;
 using DemoEF.DBContext;
 using Microsoft.EntityFrameworkCore;
 using DemoEF.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DemoEF.Controllers
 {
@@ -47,6 +48,7 @@ namespace DemoEF.Controllers
         [HttpGet]                   //  api/autores/
         [HttpGet("listado")]        //  api/autores/listado
         [HttpGet("/listado")]       //  /listado
+        [Authorize]
         public async Task<ActionResult<List<Autor>>> Get()
         {
             _logger.LogInformation("Estamos obteniendo el listado de los autores");
